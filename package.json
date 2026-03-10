@@ -1,6 +1,6 @@
 {
   "name": "mcp-obsidian",
-  "version": "0.2.0",
+  "version": "0.1.0",
   "private": true,
   "description": "Lightweight MCP server for Obsidian REST API with proper UTF-8 and PATCH v3 support.",
   "type": "module",
