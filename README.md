@@ -117,6 +117,12 @@ This MCP server communicates **only** with the local Obsidian REST API (default 
 
 The `fetch` tool makes outbound HTTP requests only when explicitly invoked by the user.
 
+## Support
+
+If this project is useful to you and you'd like to support further development, you can do so on Ko-fi.
+
+<a href='https://ko-fi.com/O4O11VQFK1' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+
 ## License
 
 [MIT](LICENSE)
