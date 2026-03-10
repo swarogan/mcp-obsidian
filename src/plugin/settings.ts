@@ -2,9 +2,12 @@ import { Notice, PluginSettingTab, Setting } from "obsidian";
 import type { App } from "obsidian";
 import type McpObsidianPlugin from "./main";
 import { detectObsidianApi } from "./obsidian-api-bridge";
+import { installMcpServer, uninstallMcpServer, getInstalledVersion } from "./npm-install";
 
 export class McpObsidianSettingTab extends PluginSettingTab {
   plugin: McpObsidianPlugin;
+  private installedVersion: string | null = null;
+  private versionChecked = false;
 
   constructor(app: App, plugin: McpObsidianPlugin) {
     super(app, plugin);
@@ -99,6 +102,70 @@ export class McpObsidianSettingTab extends PluginSettingTab {
             }
           }),
       );
+
+    // --- MCP Server Install ---
+    containerEl.createEl("h3", { text: "MCP Server" });
+
+    const installSetting = new Setting(containerEl).setName("mcp-obsidian");
+
+    if (!this.versionChecked) {
+      installSetting.setDesc("Checking...");
+      getInstalledVersion().then((version) => {
+        this.installedVersion = version;
+        this.versionChecked = true;
+        this.display();
+      });
+    } else if (this.installedVersion) {
+      installSetting.setDesc(`Installed: v${this.installedVersion}`);
+      installSetting.addButton((button) =>
+        button
+          .setButtonText("Reinstall")
+          .onClick(async () => {
+            try {
+              new Notice("Installing mcp-obsidian...");
+              await installMcpServer();
+              this.installedVersion = await getInstalledVersion();
+              new Notice("mcp-obsidian reinstalled.");
+              this.display();
+            } catch (e) {
+              new Notice(`Install failed: ${e}`);
+            }
+          }),
+      );
+      installSetting.addButton((button) =>
+        button
+          .setButtonText("Uninstall")
+          .setWarning()
+          .onClick(async () => {
+            try {
+              await uninstallMcpServer();
+              this.installedVersion = null;
+              new Notice("mcp-obsidian uninstalled.");
+              this.display();
+            } catch (e) {
+              new Notice(`Uninstall failed: ${e}`);
+            }
+          }),
+      );
+    } else {
+      installSetting.setDesc("Not installed");
+      installSetting.addButton((button) =>
+        button
+          .setButtonText("Install")
+          .setCta()
+          .onClick(async () => {
+            try {
+              new Notice("Installing mcp-obsidian...");
+              await installMcpServer();
+              this.installedVersion = await getInstalledVersion();
+              new Notice("mcp-obsidian installed.");
+              this.display();
+            } catch (e) {
+              new Notice(`Install failed: ${e}`);
+            }
+          }),
+      );
+    }
 
     // --- MCP Config ---
     containerEl.createEl("h3", { text: "MCP Configuration" });
