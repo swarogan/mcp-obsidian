@@ -1,0 +1,17 @@
+{
+  "name": "mcp-obsidian",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Lekki serwer MCP dla Obsidian Local REST API z poprawnym UTF-8 i PATCH v3.",
+  "type": "module",
+  "bin": {
+    "mcp-obsidian": "./src/index.js"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node --test test/*.test.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
