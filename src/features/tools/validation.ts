@@ -200,10 +200,14 @@ export function validatePatch(
     throw new ToolArgumentError(`Pole \`content\` w narzędziu \`${toolName}\` jest wymagane.`);
   }
 
+  const operation = requireEnum(args, "operation", ["append", "prepend", "replace", "search-replace"] as const, toolName);
+
   return {
     ...(withFilename ? { filename: requireString(args, "filename", toolName) } : {}),
-    operation: requireEnum(args, "operation", ["append", "prepend", "replace"] as const, toolName),
-    targetType: requireEnum(args, "targetType", ["heading", "block", "frontmatter"] as const, toolName),
+    operation,
+    ...(operation === "search-replace"
+      ? {}
+      : { targetType: requireEnum(args, "targetType", ["heading", "block", "frontmatter"] as const, toolName) }),
     target: requireString(args, "target", toolName),
     content: args.content,
     contentType: optionalString(args, "contentType", toolName) ?? MARKDOWN_CONTENT_TYPE,

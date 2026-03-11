@@ -85,13 +85,13 @@ export interface RequestOptions {
   requireAuth?: boolean;
 }
 
-export type PatchOperation = "append" | "prepend" | "replace";
+export type PatchOperation = "append" | "prepend" | "replace" | "search-replace";
 export type PatchTargetType = "heading" | "block" | "frontmatter";
 
 export interface PatchArgs {
   filename?: string;
   operation: PatchOperation;
-  targetType: PatchTargetType;
+  targetType?: PatchTargetType;
   target: string;
   content: unknown;
   contentType?: string;

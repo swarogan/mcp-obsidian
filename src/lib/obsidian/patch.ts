@@ -1,9 +1,9 @@
-const PATCH_OPERATIONS = new Set(["append", "prepend", "replace"]);
+const PATCH_OPERATIONS = new Set(["append", "prepend", "replace", "search-replace"]);
 const PATCH_TARGET_TYPES = new Set(["heading", "block", "frontmatter"]);
 
 export interface PatchBodyArgs {
   operation: string;
-  targetType: string;
+  targetType?: string;
   target: string;
   content: unknown;
   targetDelimiter?: string;
@@ -21,11 +21,13 @@ export function buildPatchBody({
   createTargetIfMissing = true,
 }: PatchBodyArgs): string {
   if (!PATCH_OPERATIONS.has(operation)) {
-    throw new TypeError("`operation` musi być jedną z wartości: append, prepend, replace.");
+    throw new TypeError("`operation` musi być jedną z wartości: append, prepend, replace, search-replace.");
   }
 
-  if (!PATCH_TARGET_TYPES.has(targetType)) {
-    throw new TypeError("`targetType` musi być jedną z wartości: heading, block, frontmatter.");
+  if (operation !== "search-replace") {
+    if (!targetType || !PATCH_TARGET_TYPES.has(targetType)) {
+      throw new TypeError("`targetType` musi być jedną z wartości: heading, block, frontmatter.");
+    }
   }
 
   if (typeof target !== "string" || target.trim() === "") {
@@ -34,11 +36,14 @@ export function buildPatchBody({
 
   const body: Record<string, unknown> = {
     operation,
-    targetType,
     target,
     content: typeof content === "string" ? content : JSON.stringify(content),
-    createTargetIfMissing,
   };
+
+  if (operation !== "search-replace") {
+    body.targetType = targetType;
+    body.createTargetIfMissing = createTargetIfMissing;
+  }
 
   if (targetDelimiter !== undefined) {
     body.targetDelimiter = targetDelimiter;

@@ -15,17 +15,17 @@ const patchContentSchema = {
 const patchProperties = {
   operation: {
     type: "string",
-    enum: ["append", "prepend", "replace"],
-    description: "Operacja PATCH v3.",
+    enum: ["append", "prepend", "replace", "search-replace"],
+    description: "Operacja PATCH v3. Użyj 'search-replace' do zamiany fragmentu tekstu (target = stary tekst, content = nowy tekst).",
   },
   targetType: {
     type: "string",
     enum: ["heading", "block", "frontmatter"],
-    description: "Typ celu patchowania.",
+    description: "Typ celu patchowania. Nie wymagane dla operacji 'search-replace'.",
   },
   target: {
     type: "string",
-    description: "Nagłówek, block id lub pole frontmatter.",
+    description: "Nagłówek, block id, pole frontmatter lub szukany tekst (dla search-replace).",
   },
   content: patchContentSchema,
   contentType: {
@@ -66,7 +66,6 @@ export function patchSchema(withFilename: boolean): JsonSchema {
     required: [
       ...(withFilename ? ["filename"] : []),
       "operation",
-      "targetType",
       "target",
       "content",
     ],

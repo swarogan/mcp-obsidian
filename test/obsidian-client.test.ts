@@ -48,7 +48,7 @@ test("updateActiveFile wysyła markdown UTF-8 bez psucia polskich znaków", asyn
   assert.equal(recorder.calls[0].init.body, "zażółć gęślą jaźń");
 });
 
-test("patchVaultFile buduje nagłówki PATCH v3 i koduje Unicode w ścieżce oraz target", async () => {
+test("patchVaultFile wysyła JSON body z Unicode w ścieżce i polskimi znakami", async () => {
   const recorder = createFetchRecorder(() =>
     new Response("wynik", { status: 200, headers: { "content-type": MARKDOWN_CONTENT_TYPE } }),
   );
@@ -70,15 +70,18 @@ test("patchVaultFile buduje nagłówki PATCH v3 i koduje Unicode w ścieżce ora
   assert.equal(patched, "wynik");
   assert.equal(recorder.calls[0].url, "http://obsidian.test/vault/Notatki/za%C5%BC%C3%B3%C5%82%C4%87%20ja%C5%BA%C5%84.md");
   assert.equal(recorder.calls[0].init.method, "PATCH");
-  assert.equal(recorder.calls[0].init.headers.Operation, "append");
-  assert.equal(recorder.calls[0].init.headers["Target-Type"], "heading");
-  assert.equal(recorder.calls[0].init.headers.Target, encodeURIComponent("Nagłówek główny::Sekcja ąę"));
-  assert.equal(recorder.calls[0].init.headers["Trim-Target-Whitespace"], "true");
-  assert.equal(recorder.calls[0].init.headers["Create-Target-If-Missing"], "true");
-  assert.equal(recorder.calls[0].init.body, "Dopisane źć");
+  assert.equal(recorder.calls[0].init.headers["Content-Type"], JSON_CONTENT_TYPE);
+
+  const body = JSON.parse(recorder.calls[0].init.body!);
+  assert.equal(body.operation, "append");
+  assert.equal(body.targetType, "heading");
+  assert.equal(body.target, "Nagłówek główny::Sekcja ąę");
+  assert.equal(body.content, "Dopisane źć");
+  assert.equal(body.trimTargetWhitespace, true);
+  assert.equal(body.createTargetIfMissing, true);
 });
 
-test("patchVaultFile serializuje application/json z polskimi znakami", async () => {
+test("patchVaultFile serializuje frontmatter z polskimi znakami", async () => {
   const recorder = createFetchRecorder(() =>
     new Response("ok", { status: 200, headers: { "content-type": MARKDOWN_CONTENT_TYPE } }),
   );
@@ -98,7 +101,36 @@ test("patchVaultFile serializuje application/json z polskimi znakami", async () 
   });
 
   assert.equal(recorder.calls[0].init.headers["Content-Type"], JSON_CONTENT_TYPE);
-  assert.equal(recorder.calls[0].init.body, JSON.stringify({ nazwa: "Łódź", liczba: 2 }));
+  const body = JSON.parse(recorder.calls[0].init.body!);
+  assert.equal(body.operation, "replace");
+  assert.equal(body.targetType, "frontmatter");
+  assert.equal(body.target, "miasto");
+  assert.equal(body.content, JSON.stringify({ nazwa: "Łódź", liczba: 2 }));
+});
+
+test("patchVaultFile search-replace nie wymaga targetType", async () => {
+  const recorder = createFetchRecorder(() =>
+    new Response("wynik", { status: 200, headers: { "content-type": MARKDOWN_CONTENT_TYPE } }),
+  );
+  const client = new ObsidianRestClient({
+    baseUrl: "http://obsidian.test",
+    apiKey: "sekret",
+    fetchImpl: recorder.fetch,
+  });
+
+  await client.patchVaultFile({
+    filename: "test.md",
+    operation: "search-replace",
+    target: "- [ ] B4",
+    content: "- [x] B4",
+  });
+
+  const body = JSON.parse(recorder.calls[0].init.body!);
+  assert.equal(body.operation, "search-replace");
+  assert.equal(body.target, "- [ ] B4");
+  assert.equal(body.content, "- [x] B4");
+  assert.equal(body.targetType, undefined);
+  assert.equal(body.createTargetIfMissing, undefined);
 });
 
 test("normalizeVaultPath odrzuca traversal i zachowuje zwykłe ścieżki", () => {
