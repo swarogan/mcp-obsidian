@@ -13,7 +13,7 @@ Zero npm dependencies. Node.js built-ins only.
 - **Obsidian plugin** — settings tab with auto-detect, install, and copyable config
 - **Zero dependencies** — uses only Node.js built-in modules
 - **UTF-8 correct** — all markdown operations preserve Unicode properly
-- **PATCH v3** — proper header-based patch with heading/block/frontmatter targeting
+- **PATCH v3** — heading/block/frontmatter targeting + `search-replace` for precise text substitution
 - **Web fetch** — built-in HTML to Markdown conversion
 
 ## Requirements
@@ -83,7 +83,7 @@ claude mcp add obsidian -e OBSIDIAN_API_KEY="your-api-key" -- npx -y mcp-obsidia
 - `get_active_file` — read current file (markdown or JSON)
 - `update_active_file` — replace entire content
 - `append_to_active_file` — append content
-- `patch_active_file` — patch heading/block/frontmatter
+- `patch_active_file` — patch heading/block/frontmatter or search-replace text
 - `delete_active_file` — delete current file
 - `show_file_in_obsidian` — open file in Obsidian UI
 
@@ -92,7 +92,7 @@ claude mcp add obsidian -e OBSIDIAN_API_KEY="your-api-key" -- npx -y mcp-obsidia
 - `get_vault_file` — read file by path
 - `create_vault_file` — create or overwrite file
 - `append_to_vault_file` — append to file
-- `patch_vault_file` — patch heading/block/frontmatter
+- `patch_vault_file` — patch heading/block/frontmatter or search-replace text
 - `delete_vault_file` — delete file
 
 ### Search
@@ -119,7 +119,7 @@ The server supports MCP `prompts` capability:
 npm test
 ```
 
-27 tests covering tools, prompts, client, UTF-8, PATCH headers, and stdio transport.
+28 tests covering tools, prompts, client, UTF-8, PATCH operations, and stdio transport.
 
 ## Network Usage
 
