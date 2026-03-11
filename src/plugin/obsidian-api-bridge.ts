@@ -5,9 +5,13 @@ export interface ObsidianApiInfo {
   url: string;
 }
 
+interface ObsidianPluginManager {
+  plugins: Record<string, { settings?: Record<string, unknown> }>;
+  enabledPlugins?: Set<string>;
+}
+
 export function detectObsidianApi(app: App): ObsidianApiInfo | null {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const plugins = (app as any).plugins;
+  const plugins = (app as unknown as { plugins: ObsidianPluginManager }).plugins;
   if (!plugins?.plugins?.["obsidian-api"]) {
     return null;
   }

@@ -1,9 +1,9 @@
 {
-	"id": "mcp-obsidian",
-	"name": "MCP Obsidian",
+	"id": "mcp-tools",
+	"name": "MCP Tools",
 	"version": "0.1.0",
 	"minAppVersion": "1.0.0",
-	"description": "MCP server for Obsidian — connects Claude to your vault via obsidian-api.",
+	"description": "MCP server that connects AI assistants to your vault via the local REST API.",
 	"author": "vigeron",
 	"authorUrl": "https://github.com/vigeron",
 	"isDesktopOnly": true

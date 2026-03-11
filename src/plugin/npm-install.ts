@@ -26,11 +26,11 @@ function run(cmd: string, args: string[]): Promise<string> {
   });
 }
 
-export async function installMcpServer(): Promise<string> {
+export function installMcpServer(): Promise<string> {
   return run("npm", ["install", "-g", ...prefixArgs(), PACKAGE]);
 }
 
-export async function uninstallMcpServer(): Promise<string> {
+export function uninstallMcpServer(): Promise<string> {
   return run("npm", ["uninstall", "-g", ...prefixArgs(), PACKAGE]);
 }
 

@@ -65,7 +65,7 @@ export function createMcpServer({ clientFactory = () => createClientFromEnv(), f
   let initialized = false;
   let clientPromise: Promise<ObsidianRestClient> | undefined;
 
-  const getClient = async (): Promise<ObsidianRestClient> => {
+  const getClient = (): Promise<ObsidianRestClient> => {
     clientPromise ??= Promise.resolve().then(() => clientFactory());
     return clientPromise;
   };

@@ -64,7 +64,7 @@ export async function buildApiError(response: Response): Promise<ObsidianApiErro
   });
 }
 
-export async function parseResponse(response: Response, responseType: string): Promise<unknown> {
+export function parseResponse(response: Response, responseType: string): Promise<unknown> | null {
   if (response.status === 204 || responseType === "none") {
     return null;
   }

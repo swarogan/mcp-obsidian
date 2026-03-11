@@ -18,7 +18,7 @@ export class McpObsidianSettingTab extends PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
 
-    containerEl.createEl("h2", { text: "MCP Obsidian Settings" });
+    new Setting(containerEl).setName("MCP tools settings").setHeading();
 
     // --- Status obsidian-api ---
     const info = detectObsidianApi(this.plugin.app);
@@ -53,11 +53,11 @@ export class McpObsidianSettingTab extends PluginSettingTab {
 
     // --- API Key ---
     new Setting(containerEl)
-      .setName("API Key")
-      .setDesc("obsidian-api Bearer token")
+      .setName("API key")
+      .setDesc("REST API bearer token")
       .addText((text) =>
         text
-          .setPlaceholder("API Key")
+          .setPlaceholder("API key")
           .setValue(this.plugin.settings.obsidianApiKey)
           .setDisabled(this.plugin.settings.autoDetectApiKey && !!info)
           .onChange(async (value) => {
@@ -73,8 +73,8 @@ export class McpObsidianSettingTab extends PluginSettingTab {
 
     // --- API URL ---
     new Setting(containerEl)
-      .setName("API URL")
-      .setDesc("obsidian-api base URL")
+      .setName("API url")
+      .setDesc("REST API base URL")
       .addText((text) =>
         text
           .setPlaceholder("https://127.0.0.1:27124")
@@ -104,7 +104,7 @@ export class McpObsidianSettingTab extends PluginSettingTab {
       );
 
     // --- MCP Server Install ---
-    containerEl.createEl("h3", { text: "MCP Server" });
+    new Setting(containerEl).setName("MCP server").setHeading();
 
     const installSetting = new Setting(containerEl).setName("mcp-obsidian");
 
@@ -168,11 +168,9 @@ export class McpObsidianSettingTab extends PluginSettingTab {
     }
 
     // --- MCP Config ---
-    containerEl.createEl("h3", { text: "MCP Configuration" });
-    containerEl.createEl("p", {
-      text: "Add this to your MCP client config (Claude Code, Claude Desktop, etc.):",
-      cls: "setting-item-description",
-    });
+    new Setting(containerEl).setName("MCP configuration").setHeading();
+    new Setting(containerEl)
+      .setDesc("Add this to your MCP client config (Claude Code, Claude Desktop, etc.):");
 
     const mcpConfig = JSON.stringify(
       {
