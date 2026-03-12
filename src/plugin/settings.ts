@@ -169,9 +169,6 @@ export class McpObsidianSettingTab extends PluginSettingTab {
 
     // --- MCP Config ---
     new Setting(containerEl).setName("MCP configuration").setHeading();
-    new Setting(containerEl)
-      .setDesc("Add this to your MCP client config (Claude Code, Claude Desktop, etc.):");
-
     const mcpConfig = JSON.stringify(
       {
         mcpServers: {
@@ -190,9 +187,10 @@ export class McpObsidianSettingTab extends PluginSettingTab {
     );
 
     new Setting(containerEl)
-      .setDesc(mcpConfig)
+      .setName("Client config")
+      .setDesc("Add this JSON to your MCP client (Claude Code, Claude Desktop).")
       .addButton((button) =>
-        button.setButtonText("Copy MCP config").onClick(async () => {
+        button.setButtonText("Copy").onClick(async () => {
           await navigator.clipboard.writeText(mcpConfig);
           new Notice("MCP config copied to clipboard.");
         }),
