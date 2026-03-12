@@ -26,12 +26,13 @@ export function detectObsidianApi(app: App): ObsidianApiInfo | null {
     return null;
   }
 
+  const host = String(settings.bindingHost || "127.0.0.1");
   let url: string;
   if (settings.enableInsecureServer && settings.insecurePort) {
-    url = `http://${settings.bindingHost || "127.0.0.1"}:${settings.insecurePort}`;
+    url = `http://${host}:${String(settings.insecurePort)}`;
   } else {
-    url = `https://${settings.bindingHost || "127.0.0.1"}:${settings.port || 27124}`;
+    url = `https://${host}:${String(settings.port || 27124)}`;
   }
 
-  return { apiKey: settings.apiKey, url };
+  return { apiKey: String(settings.apiKey), url };
 }

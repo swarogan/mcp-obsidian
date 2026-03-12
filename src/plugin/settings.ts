@@ -18,7 +18,7 @@ export class McpObsidianSettingTab extends PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
 
-    new Setting(containerEl).setName("MCP tools settings").setHeading();
+    new Setting(containerEl).setName("Connection").setHeading();
 
     // --- Status obsidian-api ---
     const info = detectObsidianApi(this.plugin.app);
@@ -73,7 +73,7 @@ export class McpObsidianSettingTab extends PluginSettingTab {
 
     // --- API URL ---
     new Setting(containerEl)
-      .setName("API url")
+      .setName("API URL")
       .setDesc("REST API base URL")
       .addText((text) =>
         text
@@ -189,17 +189,13 @@ export class McpObsidianSettingTab extends PluginSettingTab {
       2,
     );
 
-    const codeEl = containerEl.createEl("pre");
-    codeEl.createEl("code", { text: mcpConfig });
-    codeEl.style.userSelect = "all";
-    codeEl.style.cursor = "pointer";
-    codeEl.style.fontSize = "0.85em";
-
-    new Setting(containerEl).addButton((button) =>
-      button.setButtonText("Copy MCP config").onClick(async () => {
-        await navigator.clipboard.writeText(mcpConfig);
-        new Notice("MCP config copied to clipboard.");
-      }),
-    );
+    new Setting(containerEl)
+      .setDesc(mcpConfig)
+      .addButton((button) =>
+        button.setButtonText("Copy MCP config").onClick(async () => {
+          await navigator.clipboard.writeText(mcpConfig);
+          new Notice("MCP config copied to clipboard.");
+        }),
+      );
   }
 }

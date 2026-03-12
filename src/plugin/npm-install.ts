@@ -39,7 +39,7 @@ export async function getInstalledVersion(): Promise<string | null> {
     const out = await run("npm", ["ls", "-g", ...prefixArgs(), PACKAGE, "--depth=0", "--json"]);
     const data = JSON.parse(out);
     return data.dependencies?.[PACKAGE]?.version ?? null;
-  } catch {
+  } catch (_err: unknown) {
     return null;
   }
 }
