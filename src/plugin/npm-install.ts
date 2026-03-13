@@ -2,7 +2,7 @@ import { execFile } from "child_process";
 import { homedir, platform } from "os";
 import { join } from "path";
 
-const PACKAGE = "mcp-obsidian";
+const PACKAGE = "@swarogan/obsidian-mcp-rest";
 
 function prefixArgs(): string[] {
   // Linux npm global defaults to /usr which requires root.

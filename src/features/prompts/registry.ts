@@ -5,7 +5,7 @@ import type { PromptDefinition, PromptParameter, PromptResponse } from "../../ty
 import type { ObsidianRestClient } from "../../lib/obsidian/client.js";
 
 const PROMPT_DIRECTORY = "Prompts";
-const PROMPT_TAG = "mcp-tools-prompt";
+const PROMPT_TAG = "obsidian-mcp-rest-prompt";
 
 interface NotePayload {
   content?: string;

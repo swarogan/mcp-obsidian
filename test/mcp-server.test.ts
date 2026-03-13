@@ -36,7 +36,7 @@ test("initialize negocjuje wersję i zwraca capabilities tools", async () => {
   const r = result(response);
   assert.equal(r.protocolVersion, "2025-06-18");
   assert.deepEqual(r.capabilities, { tools: {}, prompts: { listChanged: false } });
-  assert.equal((r.serverInfo as { name: string }).name, "mcp-obsidian");
+  assert.equal((r.serverInfo as { name: string }).name, "obsidian-mcp-rest");
 });
 
 test("tools/list zwraca podstawowe narzędzia", async () => {

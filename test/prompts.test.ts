@@ -36,7 +36,7 @@ test("prompts/list filtruje prompt markdowni i wyciąga argumenty template", asy
         if (filename === "Prompts/plan.md") {
           return {
             content: '<% tp.mcpTools.prompt("topic", "Temat promptu", true) %>\n<% tp.mcpTools.prompt("language") %>',
-            tags: ["mcp-tools-prompt"],
+            tags: ["obsidian-mcp-rest-prompt"],
             frontmatter: { description: "Opis promptu" },
           };
         }
@@ -77,7 +77,7 @@ test("prompts/get wykonuje template i usuwa frontmatter z wyniku", async () => {
 
         return {
           content: '<% tp.mcpTools.prompt("topic", true) %>',
-          tags: ["mcp-tools-prompt"],
+          tags: ["obsidian-mcp-rest-prompt"],
           frontmatter: { description: "Opis promptu" },
         };
       },
@@ -119,7 +119,7 @@ test("prompts/get zwraca Invalid params dla brakującego wymaganego argumentu", 
       async getVaultFile() {
         return {
           content: '<% tp.mcpTools.prompt("topic", "Temat", true) %>',
-          tags: ["mcp-tools-prompt"],
+          tags: ["obsidian-mcp-rest-prompt"],
           frontmatter: {},
         };
       },

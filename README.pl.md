@@ -1,4 +1,4 @@
-# mcp-obsidian
+# obsidian-mcp-rest
 
 Lekki, unowocześniony serwer MCP dla Obsidiana, zbudowany jako cienka warstwa nad Obsidian Local REST API.
 
@@ -65,7 +65,7 @@ Serwer obsługuje również capability `prompts`:
 Prompty są wykrywane w katalogu `Prompts/` vaulta. Serwer:
 
 - czyta pliki `.md`,
-- filtruje tylko notatki z tagiem `mcp-tools-prompt`,
+- filtruje tylko notatki z tagiem `obsidian-mcp-rest-prompt`,
 - wyciąga argumenty z wywołań `tp.mcpTools.prompt(...)`,
 - wykonuje template przez `/templates/execute`,
 - usuwa frontmatter z końcowej treści promptu.
@@ -103,7 +103,7 @@ Przykładowa komenda serwera:
 ```json
 {
   "command": "node",
-  "args": ["/sciezka/do/mcp-obsidian/src/index.js"],
+  "args": ["/sciezka/do/obsidian-mcp-rest/src/index.js"],
   "env": {
     "OBSIDIAN_API_KEY": "twoj-klucz",
     "OBSIDIAN_REST_URL": "http://127.0.0.1:27124"

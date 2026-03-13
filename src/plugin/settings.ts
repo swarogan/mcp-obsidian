@@ -106,7 +106,7 @@ export class McpObsidianSettingTab extends PluginSettingTab {
     // --- MCP Server Install ---
     new Setting(containerEl).setName("MCP server").setHeading();
 
-    const installSetting = new Setting(containerEl).setName("mcp-obsidian");
+    const installSetting = new Setting(containerEl).setName("obsidian-mcp-rest");
 
     if (!this.versionChecked) {
       installSetting.setDesc("Checking...");
@@ -122,10 +122,10 @@ export class McpObsidianSettingTab extends PluginSettingTab {
           .setButtonText("Reinstall")
           .onClick(async () => {
             try {
-              new Notice("Installing mcp-obsidian...");
+              new Notice("Installing obsidian-mcp-rest...");
               await installMcpServer();
               this.installedVersion = await getInstalledVersion();
-              new Notice("mcp-obsidian reinstalled.");
+              new Notice("obsidian-mcp-rest reinstalled.");
               this.display();
             } catch (e) {
               new Notice(`Install failed: ${e}`);
@@ -140,7 +140,7 @@ export class McpObsidianSettingTab extends PluginSettingTab {
             try {
               await uninstallMcpServer();
               this.installedVersion = null;
-              new Notice("mcp-obsidian uninstalled.");
+              new Notice("obsidian-mcp-rest uninstalled.");
               this.display();
             } catch (e) {
               new Notice(`Uninstall failed: ${e}`);
@@ -155,10 +155,10 @@ export class McpObsidianSettingTab extends PluginSettingTab {
           .setCta()
           .onClick(async () => {
             try {
-              new Notice("Installing mcp-obsidian...");
+              new Notice("Installing obsidian-mcp-rest...");
               await installMcpServer();
               this.installedVersion = await getInstalledVersion();
-              new Notice("mcp-obsidian installed.");
+              new Notice("obsidian-mcp-rest installed.");
               this.display();
             } catch (e) {
               new Notice(`Install failed: ${e}`);
@@ -174,7 +174,7 @@ export class McpObsidianSettingTab extends PluginSettingTab {
         mcpServers: {
           obsidian: {
             command: "npx",
-            args: ["-y", "mcp-obsidian"],
+            args: ["-y", "@swarogan/obsidian-mcp-rest"],
             env: {
               OBSIDIAN_API_KEY: this.plugin.settings.obsidianApiKey || "<your-api-key>",
               OBSIDIAN_REST_URL: this.plugin.settings.obsidianApiUrl,

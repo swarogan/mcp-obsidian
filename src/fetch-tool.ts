@@ -1,6 +1,6 @@
 import type { FetchContentArgs, FetchContentResult } from "./types.js";
 
-const DEFAULT_FETCH_USER_AGENT = "mcp-obsidian/0.1";
+const DEFAULT_FETCH_USER_AGENT = "obsidian-mcp-rest/0.1";
 
 function decodeHtmlEntities(text: string): string {
   return text

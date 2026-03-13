@@ -1,11 +1,11 @@
 {
-  "name": "mcp-obsidian",
+  "name": "@swarogan/obsidian-mcp-rest",
   "version": "0.1.0",
-  "description": "MCP server for Obsidian — connects AI agents to your vault via obsidian-api",
+  "description": "MCP server for Obsidian — connects AI agents to your vault via Local REST API",
   "type": "module",
   "main": "main.js",
   "bin": {
-    "mcp-obsidian": "./dist/index.js"
+    "obsidian-mcp-rest": "dist/index.js"
   },
   "exports": {
     ".": "./dist/index.js",
@@ -25,6 +25,23 @@
     "test": "tsc -p tsconfig.test.json && node --test dist-test/test/*.test.js",
     "clean": "rm -rf dist dist-test main.js",
     "version": "node version-bump.mjs"
+  },
+  "keywords": [
+    "obsidian",
+    "mcp",
+    "model-context-protocol",
+    "rest-api",
+    "ai-agents"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/swarogan/obsidian-mcp-rest.git"
+  },
+  "license": "MIT",
+  "author": "swarogan",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
   },
   "engines": {
     "node": ">=20"

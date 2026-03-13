@@ -16,11 +16,11 @@ export default class McpObsidianPlugin extends Plugin {
 
     this.addSettingTab(new McpObsidianSettingTab(this.app, this));
 
-    console.debug("[mcp-obsidian] Plugin loaded.");
+    console.debug("[obsidian-mcp-rest] Plugin loaded.");
   }
 
   onunload(): void {
-    console.debug("[mcp-obsidian] Plugin unloaded.");
+    console.debug("[obsidian-mcp-rest] Plugin unloaded.");
   }
 
   async loadSettings(): Promise<void> {

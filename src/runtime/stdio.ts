@@ -35,7 +35,7 @@ export function startStdioServer(server: McpServer, { input = process.stdin, out
       }
     } catch (error) {
       const text = error instanceof Error ? error.stack ?? error.message : String(error);
-      (errorOutput as NodeJS.WritableStream).write(`[mcp-obsidian] ${text}\n`);
+      (errorOutput as NodeJS.WritableStream).write(`[obsidian-mcp-rest] ${text}\n`);
 
       if (message && typeof message === "object" && Object.hasOwn(message as object, "id")) {
         writeMessage({
@@ -70,7 +70,7 @@ export function startStdioServer(server: McpServer, { input = process.stdin, out
 
   input.on("end", () => {
     if (buffer.trim() !== "") {
-      (errorOutput as NodeJS.WritableStream).write("[mcp-obsidian] Pominięto końcowe dane bez znaku nowej linii.\n");
+      (errorOutput as NodeJS.WritableStream).write("[obsidian-mcp-rest] Pominięto końcowe dane bez znaku nowej linii.\n");
     }
   });
 

@@ -7,7 +7,7 @@ import type { ObsidianRestClient } from "../lib/obsidian/client.js";
 type FetchFn = typeof globalThis.fetch;
 
 const SERVER_INFO = {
-  name: "mcp-obsidian",
+  name: "obsidian-mcp-rest",
   title: "MCP Obsidian",
   version: "0.2.0",
 };

@@ -1,4 +1,4 @@
-# mcp-obsidian
+# obsidian-mcp-rest
 
 A lightweight MCP (Model Context Protocol) server for Obsidian, built as a thin wrapper over the Obsidian REST API.
 
@@ -29,13 +29,13 @@ Zero npm dependencies. Node.js built-ins only.
 ### As MCP server
 
 ```bash
-npx -y mcp-obsidian
+npx -y @swarogan/obsidian-mcp-rest
 ```
 
 ### As Obsidian plugin
 
-1. Download `main.js`, `manifest.json`, and `styles.css` from the [latest release](https://github.com/vigeron/mcp-obsidian/releases/latest)
-2. Create `<vault>/.obsidian/plugins/mcp-obsidian/` and place the files there
+1. Download `main.js`, `manifest.json`, and `styles.css` from the [latest release](https://github.com/swarogan/obsidian-mcp-rest/releases/latest)
+2. Create `<vault>/.obsidian/plugins/obsidian-mcp-rest/` and place the files there
 3. Enable the plugin in Obsidian settings
 4. The plugin auto-detects obsidian-api settings and provides a copyable MCP config
 
@@ -54,7 +54,7 @@ Set environment variables:
 ### Claude Code
 
 ```bash
-claude mcp add obsidian -e OBSIDIAN_API_KEY="your-api-key" -- npx -y mcp-obsidian
+claude mcp add obsidian -e OBSIDIAN_API_KEY="your-api-key" -- npx -y @swarogan/obsidian-mcp-rest
 ```
 
 ### Claude Desktop / other MCP clients
@@ -64,7 +64,7 @@ claude mcp add obsidian -e OBSIDIAN_API_KEY="your-api-key" -- npx -y mcp-obsidia
   "mcpServers": {
     "obsidian": {
       "command": "npx",
-      "args": ["-y", "mcp-obsidian"],
+      "args": ["-y", "@swarogan/obsidian-mcp-rest"],
       "env": {
         "OBSIDIAN_API_KEY": "your-api-key",
         "OBSIDIAN_REST_URL": "https://127.0.0.1:27124"
@@ -108,7 +108,7 @@ claude mcp add obsidian -e OBSIDIAN_API_KEY="your-api-key" -- npx -y mcp-obsidia
 
 The server supports MCP `prompts` capability:
 
-- Auto-discovers `.md` files in `Prompts/` directory with `mcp-tools-prompt` tag
+- Auto-discovers `.md` files in `Prompts/` directory with `obsidian-mcp-rest-prompt` tag
 - Parses `tp.mcpTools.prompt(...)` calls for argument definitions
 - Executes templates via Templater plugin
 - Strips frontmatter from output

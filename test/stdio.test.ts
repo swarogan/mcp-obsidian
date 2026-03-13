@@ -88,7 +88,7 @@ test("startStdioServer zwraca parse error i internal error dla błędnych linii"
   assert.equal(parseError.error!.code, -32700);
   assert.equal(internalError.error!.code, -32603);
   assert.equal(internalError.id, 7);
-  assert.match(errorOutput.getText(), /\[mcp-obsidian\].*boom/s);
+  assert.match(errorOutput.getText(), /\[obsidian-mcp-rest\].*boom/s);
 });
 
 test("startStdioServer loguje końcowe dane bez znaku nowej linii", async () => {
