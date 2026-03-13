@@ -1,6 +1,6 @@
 {
-	"id": "obsidian-mcp-rest",
-	"name": "Obsidian MCP REST",
+	"id": "mcp-rest",
+	"name": "MCP REST",
 	"version": "0.1.1",
 	"minAppVersion": "1.0.0",
 	"description": "MCP server that connects AI assistants to your vault via the local REST API.",
