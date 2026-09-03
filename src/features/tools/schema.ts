@@ -16,16 +16,16 @@ const patchProperties = {
   operation: {
     type: "string",
     enum: ["append", "prepend", "replace", "search-replace"],
-    description: "Operacja PATCH v3. Użyj 'search-replace' do zamiany fragmentu tekstu (target = stary tekst, content = nowy tekst).",
+    description: "Operacja PATCH. append/prepend/replace trafiają do API i wymagają targetType. 'search-replace' jest emulowane po stronie klienta (odczyt-zamiana-zapis): target = szukany tekst, content = nowy tekst.",
   },
   targetType: {
     type: "string",
     enum: ["heading", "block", "frontmatter"],
-    description: "Typ celu patchowania. Nie wymagane dla operacji 'search-replace'.",
+    description: "Typ celu. Wymagany dla append/prepend/replace; ignorowany dla 'search-replace'.",
   },
   target: {
     type: "string",
-    description: "Nagłówek, block id, pole frontmatter lub szukany tekst (dla search-replace).",
+    description: "Dla heading: pełna ścieżka od korzenia rozdzielona '::' (np. 'Nagłówek::Podsekcja') — sam tytuł podsekcji zwróci 40080 invalid-target. Dla block: block id. Dla frontmatter: nazwa pola. Dla search-replace: szukany tekst.",
   },
   content: patchContentSchema,
   contentType: {

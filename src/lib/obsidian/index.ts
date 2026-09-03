@@ -7,5 +7,5 @@ export {
 } from "./constants.js";
 export { ObsidianApiError } from "./errors.js";
 export { normalizeVaultDirectoryPath, normalizeVaultPath, encodeVaultDirectoryPath, encodeVaultPath } from "./path-utils.js";
-export { buildPatchBody } from "./patch.js";
+export { buildPatchRequest, applySearchReplace, SEARCH_REPLACE } from "./patch.js";
 export { ObsidianRestClient, createClientFromEnv } from "./client.js";

@@ -6,7 +6,7 @@ import {
   JSON_NOTE_CONTENT_TYPE,
   MARKDOWN_CONTENT_TYPE,
 } from "./constants.js";
-import { buildPatchBody } from "./patch.js";
+import { applySearchReplace, buildPatchRequest, SEARCH_REPLACE } from "./patch.js";
 import { encodeVaultDirectoryPath, encodeVaultPath, normalizeVaultDirectoryPath, normalizeVaultPath } from "./path-utils.js";
 import {
   assertStringRecord,
@@ -113,10 +113,19 @@ export class ObsidianRestClient {
   }
 
   async patchActiveFile(args: PatchArgs): Promise<unknown> {
+    if (args.operation === SEARCH_REPLACE) {
+      const current = await this.getActiveFile({ format: "markdown" });
+      const { content } = applySearchReplace(current, args.target, args.content);
+      await this.updateActiveFile(content);
+      return content;
+    }
+
+    const { headers, body } = buildPatchRequest(args);
+
     return this.request("/active/", {
       method: "PATCH",
-      headers: { "Content-Type": JSON_CONTENT_TYPE },
-      body: buildPatchBody(args),
+      headers,
+      body,
       responseType: "text",
     });
   }
@@ -195,10 +204,19 @@ export class ObsidianRestClient {
   }
 
   async patchVaultFile({ filename, ...args }: PatchArgs & { filename: string }): Promise<unknown> {
+    if (args.operation === SEARCH_REPLACE) {
+      const current = await this.getVaultFile(filename, { format: "markdown" });
+      const { content } = applySearchReplace(current, args.target, args.content);
+      await this.createVaultFile(filename, content);
+      return content;
+    }
+
+    const { headers, body } = buildPatchRequest(args);
+
     return this.request(`/vault/${encodeVaultPath(filename)}`, {
       method: "PATCH",
-      headers: { "Content-Type": JSON_CONTENT_TYPE },
-      body: buildPatchBody(args),
+      headers,
+      body,
       responseType: "text",
     });
   }
