@@ -70,15 +70,18 @@ test("patchVaultFile wysyła JSON body z Unicode w ścieżce i polskimi znakami"
   assert.equal(patched, "wynik");
   assert.equal(recorder.calls[0].url, "http://obsidian.test/vault/Notatki/za%C5%BC%C3%B3%C5%82%C4%87%20ja%C5%BA%C5%84.md");
   assert.equal(recorder.calls[0].init.method, "PATCH");
-  assert.equal(recorder.calls[0].init.headers["Content-Type"], JSON_CONTENT_TYPE);
 
-  const body = JSON.parse(recorder.calls[0].init.body!);
-  assert.equal(body.operation, "append");
-  assert.equal(body.targetType, "heading");
-  assert.equal(body.target, "Nagłówek główny::Sekcja ąę");
-  assert.equal(body.content, "Dopisane źć");
-  assert.equal(body.trimTargetWhitespace, true);
-  assert.equal(body.createTargetIfMissing, true);
+  // The API takes patch parameters as headers and the payload as the raw body.
+  const headers = recorder.calls[0].init.headers;
+  assert.equal(headers.Operation, "append");
+  assert.equal(headers["Target-Type"], "heading");
+  // Non-ASCII is percent-encoded; ASCII (spaces, "::") stays verbatim.
+  assert.equal(headers.Target, "Nag%C5%82%C3%B3wek g%C5%82%C3%B3wny::Sekcja %C4%85%C4%99");
+  assert.equal(headers["Trim-Target-Whitespace"], "true");
+  assert.equal(headers["Create-Target-If-Missing"], "true");
+  // No charset parameter: the PATCH endpoint rejects it with 40012.
+  assert.equal(headers["Content-Type"], "text/markdown");
+  assert.equal(recorder.calls[0].init.body, "Dopisane źć");
 });
 
 test("patchVaultFile serializuje frontmatter z polskimi znakami", async () => {
@@ -100,17 +103,20 @@ test("patchVaultFile serializuje frontmatter z polskimi znakami", async () => {
     content: { nazwa: "Łódź", liczba: 2 },
   });
 
-  assert.equal(recorder.calls[0].init.headers["Content-Type"], JSON_CONTENT_TYPE);
-  const body = JSON.parse(recorder.calls[0].init.body!);
-  assert.equal(body.operation, "replace");
-  assert.equal(body.targetType, "frontmatter");
-  assert.equal(body.target, "miasto");
-  assert.equal(body.content, JSON.stringify({ nazwa: "Łódź", liczba: 2 }));
+  const headers = recorder.calls[0].init.headers;
+  assert.equal(headers["Content-Type"], JSON_CONTENT_TYPE);
+  assert.equal(headers.Operation, "replace");
+  assert.equal(headers["Target-Type"], "frontmatter");
+  assert.equal(headers.Target, "miasto");
+  assert.equal(recorder.calls[0].init.body, JSON.stringify({ nazwa: "Łódź", liczba: 2 }));
 });
 
-test("patchVaultFile search-replace nie wymaga targetType", async () => {
-  const recorder = createFetchRecorder(() =>
-    new Response("wynik", { status: 200, headers: { "content-type": MARKDOWN_CONTENT_TYPE } }),
+test("patchVaultFile search-replace czyta dokument i zapisuje zmienioną treść", async () => {
+  // The API has no search-replace operation, so the client emulates it: GET, replace, PUT.
+  const recorder = createFetchRecorder((_url, init) =>
+    (init as { method?: string } | undefined)?.method === "PUT"
+      ? new Response(null, { status: 204 })
+      : new Response("- [ ] B4\n- [ ] B5\n", { status: 200, headers: { "content-type": MARKDOWN_CONTENT_TYPE } }),
   );
   const client = new ObsidianRestClient({
     baseUrl: "http://obsidian.test",
@@ -118,19 +124,42 @@ test("patchVaultFile search-replace nie wymaga targetType", async () => {
     fetchImpl: recorder.fetch,
   });
 
-  await client.patchVaultFile({
+  const result = await client.patchVaultFile({
     filename: "test.md",
     operation: "search-replace",
     target: "- [ ] B4",
     content: "- [x] B4",
   });
 
-  const body = JSON.parse(recorder.calls[0].init.body!);
-  assert.equal(body.operation, "search-replace");
-  assert.equal(body.target, "- [ ] B4");
-  assert.equal(body.content, "- [x] B4");
-  assert.equal(body.targetType, undefined);
-  assert.equal(body.createTargetIfMissing, undefined);
+  assert.equal(result, "- [x] B4\n- [ ] B5\n");
+  assert.equal(recorder.calls.length, 2);
+  assert.equal(recorder.calls[0].init.method ?? "GET", "GET");
+  assert.equal(recorder.calls[1].init.method, "PUT");
+  assert.equal(recorder.calls[1].init.body, "- [x] B4\n- [ ] B5\n");
+});
+
+test("patchVaultFile search-replace zgłasza błąd, gdy nie znajdzie tekstu", async () => {
+  const recorder = createFetchRecorder(() =>
+    new Response("bez zmian", { status: 200, headers: { "content-type": MARKDOWN_CONTENT_TYPE } }),
+  );
+  const client = new ObsidianRestClient({
+    baseUrl: "http://obsidian.test",
+    apiKey: "sekret",
+    fetchImpl: recorder.fetch,
+  });
+
+  await assert.rejects(
+    client.patchVaultFile({
+      filename: "test.md",
+      operation: "search-replace",
+      target: "nie ma tego tekstu",
+      content: "cokolwiek",
+    }),
+    /Nie znaleziono szukanego tekstu/,
+  );
+
+  // Nothing is written when the search text is missing.
+  assert.equal(recorder.calls.length, 1);
 });
 
 test("normalizeVaultPath odrzuca traversal i zachowuje zwykłe ścieżki", () => {
